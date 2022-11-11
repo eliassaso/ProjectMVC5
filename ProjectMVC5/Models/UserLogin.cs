@@ -12,7 +12,7 @@ namespace ProjectMVC5.Models
         [Required(ErrorMessage = "The Email field is required")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The Password field is required")]
         public string Password { get; set; }
     }
 }

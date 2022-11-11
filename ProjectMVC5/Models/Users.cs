@@ -27,6 +27,8 @@ namespace ProjectMVC5.Models
 
         public string Password { get; set; }
 
+        public int Perfil { get; set; }
+
         [NotMapped]
         [Required]
         [System.ComponentModel.DataAnnotations.Compare("Password")]

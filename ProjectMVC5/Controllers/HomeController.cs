@@ -29,7 +29,32 @@ namespace ProjectMVC5.Controllers
 
         public ActionResult Register()
         {
+            var roles = _db.Roles.ToList();
+            /*var roles = _db.Roles.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.role.ToString()
+            });*/
+
+
+
+            ViewBag.Roles = selectList();
             return View();
+        }
+
+        private List<SelectListItem> selectList()
+        {
+            var _selectList = new List<SelectListItem>();
+            foreach (var item in _db.Roles.ToList())
+            {
+                _selectList.Add(new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.role.ToString()
+                });
+            }
+            return _selectList;
+
         }
 
         //POST: Register
@@ -37,9 +62,11 @@ namespace ProjectMVC5.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register(User _user)
         {
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
                 var check = _db.Users.FirstOrDefault(s => s.Email == _user.Email);
+                
                 if (check == null)
                 {
                     _user.Password = GetMD5(_user.Password);
@@ -56,6 +83,7 @@ namespace ProjectMVC5.Controllers
 
 
             }
+            ViewBag.Roles = selectList();
             return View();
 
 
@@ -77,13 +105,18 @@ namespace ProjectMVC5.Controllers
 
 
                 var f_password = GetMD5(_userLogin.Password);
-                var data = _db.Users.Where(s => s.Email.Equals(_userLogin.Email) && s.Password.Equals(f_password)).ToList();
-                if (data.Count() > 0)
+                var user = _db.Users.Where(s => s.Email.Equals(_userLogin.Email) && s.Password.Equals(f_password)).ToList().FirstOrDefault();
+                //var association = _db.AsociacionPerfil.Where(a => a.idUser == user.idUser).FirstOrDefault();
+                
+                if (user != null)
                 {
                     //add session
-                    Session["FullName"] = data.FirstOrDefault().FirstName + " " + data.FirstOrDefault().LastName;
-                    Session["Email"] = data.FirstOrDefault().Email;
-                    Session["idUser"] = data.FirstOrDefault().idUser;
+                    var roles = _db.Roles.Where(p => p.Id == user.Perfil).FirstOrDefault();
+                    Session["FullName"] = user.FirstName + " " + user.LastName;
+                    Session["Email"] = user.Email;
+                    Session["idUser"] = user.idUser; 
+                    Session["Roles"] = roles.role;
+                    
                     return RedirectToAction("Index");
                 }
                 else

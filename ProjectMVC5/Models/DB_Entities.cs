@@ -11,10 +11,16 @@ namespace ProjectMVC5.Models
     {
         public DB_Entities() : base("Db_website") { }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Roles> Roles { get; set; }
+        public DbSet<Association> AsociacionPerfil { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //Database.SetInitializer<demoEntities>(null);
+            modelBuilder.Entity<Roles>().ToTable("Roles");
+            modelBuilder.Entity<Association>().ToTable("AsociacionPerfil");
             modelBuilder.Entity<User>().ToTable("Users");
+            
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             base.OnModelCreating(modelBuilder);
