@@ -10,16 +10,17 @@
 
     <header>
         @*<h4>This is the header.</h4>*@
-        <div style="background-color:red; color:aliceblue">@RenderSection("Header", false)</div>
+        @RenderSection("Header", false)
     </header>
 
     <div>
+        <br />
         @RenderBody()
     </div>
 
-    <footer class="blockquote-footer">
+    <footer>
         @*<h4>I am Footer.</h4>*@
-        <div style="background-color:red; color:aliceblue">@RenderSection("Footer", false)</div>
+        @RenderSection("Footer", false)
     </footer>
 
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>

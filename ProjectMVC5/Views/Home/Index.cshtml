@@ -5,77 +5,110 @@
 }
 
 @section Header{
-    This is another header
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                <a href="@Url.Action("Logout","Home")" class="btn btn-warning">Logout</a>
+            </span>
+        </div>
+    </nav>
 }
 
-<div class="row justify-content-md-start">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                Wellcome
-            </div>
-            <div class="card-body">
-                @if (Session["FullName"] != null)
-                {
-                    <p>Name: @Session["FullName"].ToString()</p>
-                    <p>Email: @Session["Email"].ToString()</p>
-                    <p>Role: @Session["Roles"].ToString()</p>
-                    if (Session["Roles"].ToString() == "Admin")
+<div class="container-lg">
+    <div class="row">
+        <br />
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    Wellcome
+                </div>
+                <div class="card-body">
+                    @if (Session["FullName"] != null)
                     {
-                        <h2>Es Admin</h2>
+                        <p>Name: @Session["FullName"].ToString()</p>
+                        <p>Email: @Session["Email"].ToString()</p>
+                        <p>Role: @Session["Roles"].ToString()</p>
+                        @*if (Session["Roles"].ToString() == "Admin")
+                        {
+                            <h2>Es Admin</h2>
+                        }*@
+
+                        @Ajax.ActionLink("See the User Id", // <-- Text to display
+                                            "AjaxNetTest", // <-- Action Method Name
+                                            new { email = @Session["Email"].ToString() },
+                                            new AjaxOptions
+                                            {
+                                             UpdateTargetId = "test", // <-- DOM element ID to update
+                                             InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
+                                             HttpMethod = "GET" // <-- HTTP method
+                                            })
+                        <span id="test" class="badge badge-primary"></span>
                     }
-
-                    @Ajax.ActionLink("Test", // <-- Text to display
-                                        "AjaxNetTest", // <-- Action Method Name
-                                        new { email = @Session["Email"].ToString() },
-                                        new AjaxOptions
-                                        {
-                                         UpdateTargetId = "test", // <-- DOM element ID to update
-                                         InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
-                                         HttpMethod = "GET" // <-- HTTP method
-                                        })
-                    <span id="test" class="badge badge-primary"></span>
-
-                    <a href="@Url.Action("Logout","Home")" class="btn btn-warning">Logout</a>
-                }
+                </div>
             </div>
-        </div>
 
+        </div>
+        <div class="col-lg-9">
+            @if (Session["Roles"].ToString() == "Admin")
+            {
+                <table class="table">
+                    <thead class="table-info">
+                        <tr>
+                            <th>Id</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.idUser)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Password)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.idUser }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.idUser })
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+            }
+            else
+            {
+                <h3> You can´t see the users table due to permissions </h3>
+            }
+        </div>
     </div>
 </div>
-<div class="container-fluid">
-    <table class="table">
-        <tr>
-            <th>Id</th>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Password</th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.idUser)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Password)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit Me", "Edit", new { id = item.idUser }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.idUser }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.idUser })
-                </td>
-            </tr>
-        }
-    </table>
-</div>
+<br />
 
 @section script
 {
@@ -83,5 +116,17 @@
 }
 
 @section Footer{
-    This is another Footer
+    <div class="card text-center">
+        <div class="card-header">
+            Footer
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">This is an example</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+        <div class="card-footer text-muted">
+            By UCAT
+        </div>
+    </div>
 }

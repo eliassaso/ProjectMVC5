@@ -40,6 +40,7 @@
                     <span class="badge badge-danger">@ViewBag.error</span>
                 }
                 <span id="viewError" class="badge badge-danger"></span>
+                <span id="loading" class="badge badge-primary text-center"></span>
 
 
                 @using (Ajax.BeginForm("Login2", new AjaxOptions()
@@ -76,7 +77,8 @@
     <script>
         $(function () {
             $("#btnValidate").click(function () {
-                // alert("Hello");
+                
+                $("#loading").text("Loading...");
                 var vEmail = $("#Email").val();
                 var vPassword = $("#Password").val();
 
@@ -89,6 +91,7 @@
                         if (response === "Success")
                             window.location.href = "https://localhost:44342";
                         else {
+                            $("#loading").text("");
                             $("#viewError").text(response);
                         }
                     }
