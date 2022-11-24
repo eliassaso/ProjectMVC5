@@ -2,6 +2,11 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutPage1.cshtml";
 }
+
+@section Header{
+    This is another header
+}
+
 <div class="row justify-content-md-start">
     <div class="col-md-4">
         <div class="card">
@@ -18,6 +23,18 @@
                     {
                         <h2>Es Admin</h2>
                     }
+
+                    @Ajax.ActionLink("Test", // <-- Text to display
+                                        "AjaxNetTest", // <-- Action Method Name
+                                        new { email = @Session["Email"].ToString() },
+                                        new AjaxOptions
+                                        {
+                                         UpdateTargetId = "test", // <-- DOM element ID to update
+                                         InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
+                                         HttpMethod = "GET" // <-- HTTP method
+                                        })
+                    <span id="test" class="badge badge-primary"></span>
+
                     <a href="@Url.Action("Logout","Home")" class="btn btn-warning">Logout</a>
                 }
             </div>
@@ -26,6 +43,11 @@
     </div>
 </div>
 
-@*@section Footer {
-    This is the footer.
-}*@
+@section script
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+
+    @section Footer{
+        This is another Footer
+    }

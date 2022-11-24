@@ -29,15 +29,6 @@ namespace ProjectMVC5.Controllers
 
         public ActionResult Register()
         {
-            var roles = _db.Roles.ToList();
-            /*var roles = _db.Roles.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.role.ToString()
-            });*/
-
-
-
             ViewBag.Roles = selectList();
             return View();
         }
@@ -94,7 +85,64 @@ namespace ProjectMVC5.Controllers
             return View();
         }
 
+        public ActionResult AjaxNetTest(String email)
+        {
+            String idUser = _db.Users.Where(s => s.Email.Equals(email)).ToList().FirstOrDefault().idUser.ToString();
+            return Content("The User id: " + idUser);
+        }
 
+        public ActionResult Login2(String email, String password)
+        {
+            String response = "Login failed";
+            // return Content($"Email: {email} Password: {password}");
+            var f_password = GetMD5(password);
+            User user = _db.Users.Where(s => s.Email.Equals(email) && s.Password.Equals(f_password)).ToList().FirstOrDefault();
+            //var association = _db.AsociacionPerfil.Where(a => a.idUser == user.idUser).FirstOrDefault();
+
+            if (user != null)
+            {
+                response = "You are login as: " + user.FirstName;
+                var roles = _db.Roles.Where(p => p.Id == user.Perfil).FirstOrDefault();
+                Session["FullName"] = user.FirstName + " " + user.LastName;
+                Session["Email"] = user.Email;
+                Session["idUser"] = user.idUser;
+                Session["Roles"] = roles.role;
+                return RedirectToAction("ExampleView", user);
+            }
+            return Content(response);
+        }
+
+        public ActionResult ExampleView(User user)
+        {
+            if (Session["idUser"] != null)
+            {
+                return View(user);
+            }
+            else
+            {
+                return RedirectToAction("Login", user);
+            }
+        }
+
+        public ActionResult DataValidation(String email, String password)
+        {
+            String response = "Login failed";
+            // return Content($"Email: {email} Password: {password}");
+            var f_password = GetMD5(password);
+            var user = _db.Users.Where(s => s.Email.Equals(email) && s.Password.Equals(f_password)).ToList().FirstOrDefault();
+            //var association = _db.AsociacionPerfil.Where(a => a.idUser == user.idUser).FirstOrDefault();
+
+            if (user != null)
+            {
+                response = "Success";
+                var roles = _db.Roles.Where(p => p.Id == user.Perfil).FirstOrDefault();
+                Session["FullName"] = user.FirstName + " " + user.LastName;
+                Session["Email"] = user.Email;
+                Session["idUser"] = user.idUser;
+                Session["Roles"] = roles.role;
+            }
+            return Content(response);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

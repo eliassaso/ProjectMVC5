@@ -18,6 +18,7 @@
                         @Html.LabelFor(m => m.Email)
                         @Html.TextBoxFor(m => m.Email, "", new { @class = "form-control", @placeholder = "Email" })
                         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "badge badge-danger" })
+
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Password)
@@ -25,16 +26,74 @@
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "badge badge-danger" })
                     </div>
                     <div class="form-group">
-                        <input type="submit" name="submit" class="btn btn-primary" value="Login" />
+                        <input type="submit" name="submit" class="btn btn-primary" value="1 - Simple Login" />
+                    </div>
+                    <div class="form-group">
+                        <input type="button" id="btnValidate" class="btn btn-primary" value="2 - Ajax Login" />
                     </div>
 
                 }
+
                 <a class="page-scroll" href="~/Home/Register">Register</a>
                 @if (ViewBag.error != null)
                 {
                     <span class="badge badge-danger">@ViewBag.error</span>
                 }
+                <span id="viewError" class="badge badge-danger"></span>
+
+
+                @using (Ajax.BeginForm("Login2", new AjaxOptions()
+                {
+                    HttpMethod = "POST",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "response",
+                    Confirm = "Are you sure?"
+                }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email)
+                        <input type="text" class="form-control" name="Email" />
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password)
+                        <input type="password" class="form-control" name="Password" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="3 - Login AjaxBeginForm" />
+                    </div>
+                    <span id="response" class="container"></span>
+                }
+
+
             </div>
-        </div>
+                </div>
     </div>
 </div>
+
+@section script
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        $(function () {
+            $("#btnValidate").click(function () {
+                // alert("Hello");
+                var vEmail = $("#Email").val();
+                var vPassword = $("#Password").val();
+
+                $.ajax({
+                    url: "@Url.Action("DataValidation")",
+                    data: { email: vEmail, password: vPassword },
+                    type: "POST",
+                    success: function (response) {
+                        //alert(response);
+                        if (response === "Success")
+                            window.location.href = "https://localhost:44342";
+                        else {
+                            $("#viewError").text(response);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

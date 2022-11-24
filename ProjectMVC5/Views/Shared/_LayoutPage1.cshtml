@@ -7,14 +7,25 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
+
+    <header>
+        @*<h4>This is the header.</h4>*@
+        <div style="background-color:red; color:aliceblue">@RenderSection("Header", false)</div>
+    </header>
+
     <div>
         @RenderBody()
     </div>
-    @*<footer class="blockquote-footer">
-        <h4>I am Footer.</h4>
+
+    <footer class="blockquote-footer">
+        @*<h4>I am Footer.</h4>*@
         <div style="background-color:red; color:aliceblue">@RenderSection("Footer", false)</div>
-    </footer>*@
+    </footer>
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @RenderSection("script", false)
 </body>
-<script src="~/Scripts/bootstrap.min.js"></script>
-<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+
 </html>
