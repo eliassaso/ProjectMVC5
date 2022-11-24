@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace ProjectMVC5.Controllers
@@ -17,7 +18,8 @@ namespace ProjectMVC5.Controllers
         {
             if (Session["idUser"] != null)
             {
-                return View();
+                List<User> users = _db.Users.ToList();
+                return View(users);
             }
             else
             {
