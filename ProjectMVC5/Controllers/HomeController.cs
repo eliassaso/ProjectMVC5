@@ -70,6 +70,7 @@ namespace ProjectMVC5.Controllers
                 }
                 else
                 {
+                    ViewBag.Roles = selectList();
                     ViewBag.error = "Email already exists";
                     return View();
                 }
