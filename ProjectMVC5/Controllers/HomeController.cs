@@ -51,6 +51,7 @@ namespace ProjectMVC5.Controllers
         }
 
         //POST: Register
+        // comentario ejemplo para git
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(User _user)
